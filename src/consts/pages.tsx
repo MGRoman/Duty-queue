@@ -1,10 +1,10 @@
 import { BsCalendarCheck } from 'react-icons/bs';
 import { FiLogIn } from 'react-icons/fi'
-import { IPage } from "../interfaces";
+import { IPage } from "interfaces";
 
 export const pages = [
   {
-    page: "login",
+    key: "login",
     title: "login",
     Component: <div>Login</div>,
     path: "/login/",
@@ -13,7 +13,7 @@ export const pages = [
     defaultNotInitialized: true,
   },
   {
-    page: "calendar",
+    key: "calendar",
     title: "Календарь",
     Component: <div>Календарь</div>,
     path: "/calendar/",

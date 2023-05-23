@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { Layout, notification } from "antd";
 
-import { Routers } from "../routers";
+import { SideBar } from "features/sidebar";
+import { Routers } from "routers";
 
 export const App: React.FC<{ hasError: boolean }> = ({ hasError }) => {
   useEffect(() => {
@@ -13,10 +14,13 @@ export const App: React.FC<{ hasError: boolean }> = ({ hasError }) => {
   }, [hasError]);
 
   return (
-    <Layout style={{ minHeight: '100vh', maxHeight: '100vh' }}>
-      <div>Hi</div>
+    <Layout style={{ minHeight: "100vh", maxHeight: "100vh" }}>
+      <SideBar />
 
-      <Routers />
+      <Layout.Content>
+        
+        <Routers />
+      </Layout.Content>
     </Layout>
   );
 };

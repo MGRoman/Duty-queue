@@ -1,8 +1,8 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import { pages } from "../consts/pages";
-import { getPossiblePathArray } from "../utils";
+import { pages } from "consts/pages";
+import { getPossiblePathArray } from "utils";
 
 export const Routers: React.FC = () => {
   const defaultPath = getPossiblePathArray(
