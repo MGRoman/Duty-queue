@@ -1,0 +1,27 @@
+.filter-form {
+  & .form-field-wrapper {
+    margin-bottom: 24px;
+
+    & .field-label {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: var(--dark-gray);
+    }
+
+    & .field-data {
+      & [class*="root"] {
+        height: auto;
+        width: auto;
+      }
+    }
+  }
+
+  & .form-buttons-wrapper {
+    display: flex;
+    justify-content: flex-end;
+
+    & button {
+      margin-left: 10px;
+    }
+  }
+}
