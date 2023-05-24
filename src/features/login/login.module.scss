@@ -1,0 +1,29 @@
+.login {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & .login-form {
+    width: 650px;
+    height: 300px;
+    margin-bottom: 150px;
+
+    & .fields-container {
+      padding: 16px;
+
+      & [class*="ant-form-item"] {
+        width: 100%;
+        align-items: baseline;
+      }
+    }
+
+    & .buttons-container {
+      padding: 16px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 20px;
+    }
+  }
+}

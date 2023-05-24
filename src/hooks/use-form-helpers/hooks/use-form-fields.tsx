@@ -13,7 +13,6 @@ export const useFormFields = (formData: ICommonFormData[], formHelpers: IFormHel
     () =>
       formData.reduce((acc, { name, type = "text", options = [], validate, disabled, required, label }) => {
         const formItemOtions: FormItemProps = {
-          // name,
           required,
           label: (
             <Typography.Title className={`${classes?.["field-label"]}`} level={5}>
@@ -30,7 +29,7 @@ export const useFormFields = (formData: ICommonFormData[], formHelpers: IFormHel
             return {
               ...acc,
               [name]: (
-                <Form.Item {...{ ...formItemOtions }}>
+                <Form.Item {...{ ...formItemOtions }} key={name}>
                   <Input
                     className={classes?.["field-data"]}
                     disabled={disabled}
