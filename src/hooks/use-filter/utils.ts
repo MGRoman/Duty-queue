@@ -1,28 +1,28 @@
-import moment from 'moment';
+import moment from "moment";
 
-import { ICommonFormData } from 'interfaces/';
-import { TDateBetweenFiltersDataType, TFiltersData } from './interfaces';
+import { ICommonFormData } from "interfaces/";
+import { TDateBetweenFiltersDataType, TFiltersData } from "./interfaces";
 
 export const getFilteredData = (
   filteringData: Record<string, any>[],
   formData: ICommonFormData[],
-  filterValues: TFiltersData,
+  filterValues: TFiltersData
 ) =>
   filteringData.filter((item) =>
     formData.every(({ name: fieldName, type: fieldType }) => {
       switch (fieldType) {
-        case 'multi-select':
+        case "multi-select":
           if (!(filterValues[fieldName] as string[]).length) {
             return true;
           } else if (Array.isArray(item[fieldName])) {
             return (item[fieldName] as string[]).some((elem) =>
-              (filterValues[fieldName] as string[]).includes(String(elem)),
+              (filterValues[fieldName] as string[]).includes(String(elem))
             );
           } else {
             return (filterValues[fieldName] as string[]).includes(String(item[fieldName]));
           }
 
-        case 'date-between':
+        case "date-between":
           const { from: dateFrom, to: dateTo } = filterValues[fieldName] as TDateBetweenFiltersDataType;
 
           if (!dateFrom && !dateTo) {
@@ -30,7 +30,7 @@ export const getFilteredData = (
           } else if (!item[fieldName]) {
             return false;
           } else if (dateFrom && dateTo) {
-            return moment(item[fieldName]).isBetween(moment(dateFrom), moment(dateTo), undefined, '[]');
+            return moment(item[fieldName]).isBetween(moment(dateFrom), moment(dateTo), undefined, "[]");
           } else if (!dateFrom && dateTo) {
             return moment(item[fieldName]).isSameOrBefore(moment(dateTo));
           } else {
@@ -40,5 +40,5 @@ export const getFilteredData = (
         default:
           return true;
       }
-    }),
+    })
   );

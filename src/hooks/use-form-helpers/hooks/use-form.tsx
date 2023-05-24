@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { FormikConfig, FormikErrors, useFormik } from "formik";
-import { Button } from "antd";
+import { Button, Form } from "antd";
 
 import { ICommonFormData } from "interfaces";
 import { IDrawerPanelHelpers } from "hooks/use-drawer-panel";
@@ -8,15 +8,10 @@ import { validateForm } from "..";
 import { useFormFields } from "./use-form-fields";
 import { firstUC } from "utils";
 
-export interface IUseForm<T>
-  extends Omit<FormikConfig<T>, "initialValues" | "onSubmit"> {
+export interface IUseForm<T> extends Omit<FormikConfig<T>, "initialValues" | "onSubmit"> {
   formData: ICommonFormData[];
   open?: boolean;
-  onOk: (
-    values: T,
-    helpers?: IDrawerPanelHelpers,
-    isDefaultApply?: boolean
-  ) => void;
+  onOk?: (values: T, helpers?: IDrawerPanelHelpers, isDefaultApply?: boolean) => void;
   onClose?: VoidFunction;
   resetOnCancel?: boolean;
   classes?: {
@@ -38,13 +33,9 @@ export const useForm = <T extends Record<string, any>>({
   submitText = firstUC("принять"),
   cancelText = firstUC("отмена"),
   classes,
-}: IUseForm<T>) => {
+}: IUseForm<T>) => {  
   const initialValues = useMemo(
-    () =>
-      formData.reduce(
-        (acc, { name, initialValue }) => ({ ...acc, [name]: initialValue }),
-        {} as T
-      ),
+    () => formData.reduce((acc, { name, initialValue }) => ({ ...acc, [name]: initialValue }), {} as T),
     [formData]
   );
 
@@ -84,9 +75,7 @@ export const useForm = <T extends Record<string, any>>({
   }, [open, initialize]);
 
   const formSubmit = useCallback(
-    (event: any, helpers?: IDrawerPanelHelpers, isDefaultApply?: boolean) => {
-      event && event.preventDefault();
-
+    (helpers?: IDrawerPanelHelpers, isDefaultApply?: boolean) => {
       if (onOk) {
         onOk && onOk(values, helpers, isDefaultApply);
       } else {
@@ -96,7 +85,7 @@ export const useForm = <T extends Record<string, any>>({
     [onOk, handleSubmit, values]
   );
 
-  const formCancel = useCallback(() => {
+  const formCancel = useCallback(() => {    
     onClose && onClose();
 
     resetOnCancel && resetForm();
@@ -114,24 +103,24 @@ export const useForm = <T extends Record<string, any>>({
 
   const SubmitButton = useMemo(
     () => (
-      <Button
-        className={classes?.["submit-button"]}
-        disabled={!isValid}
-      >
-        {submitText}
-      </Button>
+      <Form.Item>
+        <Button htmlType="submit" disabled={!isValid} className={classes?.["submit-button"]}>
+          {submitText}
+        </Button>
+      </Form.Item>
     ),
-    [isValid, submitText, classes]
+    [classes, isValid, submitText]
   );
 
   const CancelButton = useMemo(
-    () =>
-      onClose ? (
+    () => (
+      <Form.Item>
         <Button onClick={formCancel} className={classes?.["cancel-button"]}>
-          {cancelText ?? ""}
+          {cancelText}
         </Button>
-      ) : null,
-    [cancelText, classes, formCancel, onClose]
+      </Form.Item>
+    ),
+    [cancelText, classes, formCancel]
   );
 
   return {

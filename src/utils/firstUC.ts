@@ -3,4 +3,4 @@
  * @param string строка
  * @returns строка
  */
-export const firstUC = (string?: string) => !string ? '' : string[0].toUpperCase() + string.slice(1);
+export const firstUC = (string?: string) => (!string ? "" : string[0].toUpperCase() + string.slice(1));

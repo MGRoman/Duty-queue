@@ -1,8 +1,9 @@
-import { FormikErrors } from 'formik';
+import { FormikErrors } from "formik";
 
-import { ICommonFormData } from 'interfaces';
+import { ICommonFormData } from "interfaces";
 
-export const validateForm = <T extends Record<string, any>>(formData: ICommonFormData[]) =>
+export const validateForm =
+  <T extends Record<string, any>>(formData: ICommonFormData[]) =>
   (validateValues: T) => {
     const validateErrors: FormikErrors<T> = {};
 
@@ -10,7 +11,7 @@ export const validateForm = <T extends Record<string, any>>(formData: ICommonFor
       const field = name as keyof T;
 
       if (validate && validate(validateValues[field])?.message) {
-        validateErrors[field] = validate(validateValues[field])?.message as FormikErrors<T>['field'];
+        validateErrors[field] = validate(validateValues[field])?.message as FormikErrors<T>["field"];
       }
     });
 

@@ -14,16 +14,12 @@ import "./index.css";
 
 moment.locale("ru");
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <ConfigProvider locale={ru_RU}>
-        <ErrorBoundary>
-          {(hasError) => <App hasError={hasError} />}
-        </ErrorBoundary>
+        <ErrorBoundary>{(hasError) => <App hasError={hasError} />}</ErrorBoundary>
       </ConfigProvider>
     </BrowserRouter>
   </React.StrictMode>

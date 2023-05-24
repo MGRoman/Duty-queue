@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 
 export const useParams = <TParams extends any[] = any[]>() => {
   const [params, setParams] = useState<TParams>([] as any);

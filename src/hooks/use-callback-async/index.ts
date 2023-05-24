@@ -1,21 +1,16 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from "react";
 
-import { useFetchReducer } from './use-fetch-reducer';
-import { useParams } from './use-params';
-import { useTrigger } from 'hooks';
-import { tuple } from 'utils';
+import { useFetchReducer } from "./use-fetch-reducer";
+import { useParams } from "./use-params";
+import { useTrigger } from "hooks";
+import { tuple } from "utils";
 
-export const useCallbackAsync = <
-  TData,
-  TError = any,
-  TParams extends any[] = any[],
->(
-  callback: (...args: TParams) => Promise<TData>,
+export const useCallbackAsync = <TData, TError = any, TParams extends any[] = any[]>(
+  callback: (...args: TParams) => Promise<TData>
 ) => {
   const { state, init, request, success, failure } = useFetchReducer<TData, TError>();
 
-  const [isStartFetch, { onHandler: fetchStart, offHandler: fetchFinish }] =
-    useTrigger();
+  const [isStartFetch, { onHandler: fetchStart, offHandler: fetchFinish }] = useTrigger();
 
   const { params, setParamsHandler, clearParamsHandler } = useParams<TParams>();
 
@@ -40,9 +35,8 @@ export const useCallbackAsync = <
           const message = (error as any)?.response?.statusText ?? (error as any)?.response?.data;
           const status = (error as any)?.response?.status;
 
-          const outputError = typeof (error as any)?.response?.data === 'string'
-            ? { message, status }
-            : (error as any)?.response?.data;
+          const outputError =
+            typeof (error as any)?.response?.data === "string" ? { message, status } : (error as any)?.response?.data;
 
           failure(outputError);
         } else {
@@ -55,15 +49,7 @@ export const useCallbackAsync = <
     return () => {
       cancelRequest = true;
     };
-  }, [
-    callback,
-    failure,
-    fetchFinish,
-    isStartFetch,
-    success,
-    params,
-    clearParamsHandler,
-  ]);
+  }, [callback, failure, fetchFinish, isStartFetch, success, params, clearParamsHandler]);
 
   const doFetch = useCallback(
     (...parameters: TParams) => {
@@ -71,7 +57,7 @@ export const useCallbackAsync = <
       request();
       fetchStart();
     },
-    [request, fetchStart, setParamsHandler],
+    [request, fetchStart, setParamsHandler]
   );
 
   return tuple(state, doFetch, init);

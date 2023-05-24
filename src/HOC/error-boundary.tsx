@@ -2,10 +2,7 @@ import React from "react";
 
 type TErrorBoundaryType = { children: (hasError: boolean) => React.ReactNode };
 
-export class ErrorBoundary extends React.Component<
-  TErrorBoundaryType,
-  { hasError: boolean }
-> {
+export class ErrorBoundary extends React.Component<TErrorBoundaryType, { hasError: boolean }> {
   constructor(props: TErrorBoundaryType) {
     super(props);
 
@@ -18,9 +15,6 @@ export class ErrorBoundary extends React.Component<
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({ hasError: true });
-
-    console.log('ejrhgrjdgerkj');
-    
   }
 
   render() {

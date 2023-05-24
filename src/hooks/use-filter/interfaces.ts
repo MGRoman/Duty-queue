@@ -1,6 +1,6 @@
-import { Moment } from 'moment';
+import { Moment } from "moment";
 
-import { IDrawerPanelHelpers } from 'hooks/use-drawer-panel';
+import { IDrawerPanelHelpers } from "hooks/use-drawer-panel";
 
 export type TDateBetweenFiltersDataType = { from?: Moment; to?: Moment };
 

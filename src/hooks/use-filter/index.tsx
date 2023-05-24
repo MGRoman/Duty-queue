@@ -1,18 +1,18 @@
-import React, { useCallback, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { mapValues } from 'lodash';
+import React, { useCallback, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { mapValues } from "lodash";
 
-import { ICommonFormData } from 'interfaces';
-import { TFiltersData } from './interfaces';
-import { IDrawerPanelHelpers } from 'hooks/use-drawer-panel';
-import { firstUC, queryStringToObject } from 'utils';
-import { useForm } from 'hooks';
+import { ICommonFormData } from "interfaces";
+import { TFiltersData } from "./interfaces";
+import { IDrawerPanelHelpers } from "hooks/use-drawer-panel";
+import { firstUC, queryStringToObject } from "utils";
+import { useForm } from "hooks";
 
-import classes from './use-filter.module.scss';
+import classes from "./use-filter.module.scss";
 
 export const useFilter = (
   applyFilterHandler: (filterValues: TFiltersData, helpers?: IDrawerPanelHelpers, isDefaultApply?: boolean) => void,
-  formData: ICommonFormData[],
+  formData: ICommonFormData[]
 ) => {
   const { search } = useLocation();
 
@@ -34,7 +34,7 @@ export const useFilter = (
 
       const newFilterObjectValues = {
         ...initialValues,
-        ...mapValues(searchParamsFilterObject, (v) => [v] as TFiltersData['']),
+        ...mapValues(searchParamsFilterObject, (v) => [v] as TFiltersData[""]),
       };
 
       setValues(newFilterObjectValues);
@@ -45,19 +45,19 @@ export const useFilter = (
 
   return useCallback(
     (helpers?: IDrawerPanelHelpers) => (
-      <form onSubmit={(e) => handleSubmit(e, helpers)} className={classes['filter-form']}>
+      <form onSubmit={() => handleSubmit(helpers)} className={classes["filter-form"]}>
         {formData.map(({ name }) => (
-          <div key={name} className={classes['form-field-wrapper']}>
+          <div key={name} className={classes["form-field-wrapper"]}>
             {FormFields[name]}
           </div>
         ))}
 
-        <div className={classes['form-buttons-wrapper']}>
+        <div className={classes["form-buttons-wrapper"]}>
           {CancelButton}
           {SubmitButton}
         </div>
       </form>
     ),
-    [CancelButton, FormFields, SubmitButton, formData, handleSubmit],
+    [CancelButton, FormFields, SubmitButton, formData, handleSubmit]
   );
 };

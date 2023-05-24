@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 
-import { tuple } from 'utils';
+import { tuple } from "utils";
 
 export const useTrigger = (initialState = false) => {
   const [state, setState] = useState(initialState);
