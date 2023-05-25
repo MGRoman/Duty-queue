@@ -29,7 +29,7 @@ export const useFormFields = (formData: ICommonFormData[], formHelpers: IFormHel
             return {
               ...acc,
               [name]: (
-                <Form.Item {...{ ...formItemOtions }} key={name}>
+                <Form.Item {...formItemOtions} key={name}>
                   <Input
                     className={classes?.["field-data"]}
                     disabled={disabled}
@@ -50,7 +50,7 @@ export const useFormFields = (formData: ICommonFormData[], formHelpers: IFormHel
             return {
               ...acc,
               [name]: (
-                <Form.Item {...formItemOtions}>
+                <Form.Item {...formItemOtions} key={name}>
                   <Select
                     className={classes?.["field-data"]}
                     disabled={disabled}

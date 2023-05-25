@@ -5,6 +5,8 @@ import { Layout, Menu } from "antd";
 import { pages } from "consts/pages";
 import { sideBarMenuItems } from "./consts";
 
+import classes from "./sidebar.module.scss";
+
 export const SideBar: React.FC = () => {
   const { pathname } = useLocation();
 
@@ -14,7 +16,7 @@ export const SideBar: React.FC = () => {
     return pages.find((page) => page.default)?.key ?? pages[0].key;
   }, []);
   return (
-    <Layout.Sider>
+    <Layout.Sider className={classes["sidebar-container"]}>
       <Menu
         theme="dark"
         mode="vertical"

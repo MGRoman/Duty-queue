@@ -1,6 +1,8 @@
 /**
  * Длинный человекочитаемый формат: 9 января 2023 г. 12:32:41
  */
+export const formatLongMonthYearDate = "MMMM YYYY";
+
 export const formatLongDateTime = "D MMMM YYYY г. HH:mm:ss";
 
 /**

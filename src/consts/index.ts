@@ -1,2 +1,2 @@
 export { pages } from "./pages";
-export { formatBasicFullDateTime, formatLongDateTime } from "./dateFormat";
+export { formatBasicFullDateTime, formatLongDateTime, formatLongMonthYearDate } from "./dateFormat";

@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Form } from "antd";
+import { Row, Form } from "antd";
 
 import { loginFormData } from "./consts";
 import { useForm } from "hooks";
@@ -24,7 +24,7 @@ export const Login: React.FC = () => {
   });
 
   return (
-    <div className={classes["login"]}>
+    <Row className={classes["login"]}>
       <Form onFinish={() => handleSubmit()} className={classes["login-form"]} labelCol={{ span: 8 }}>
         <div className={classes["fields-container"]}>{loginFormData.map(({ name }) => FormFields[name])}</div>
 
@@ -34,6 +34,6 @@ export const Login: React.FC = () => {
           {SubmitButton}
         </div>
       </Form>
-    </div>
+    </Row>
   );
 };
