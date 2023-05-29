@@ -1,0 +1,15 @@
+.schedule-container {
+  & .schedule {
+    display: grid;
+
+    & .header-cell {
+      height: 35px;
+      font-size: 14px;
+      font-weight: 450;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

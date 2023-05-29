@@ -3,7 +3,7 @@ import { FiLogIn } from "react-icons/fi";
 
 import { IPage } from "interfaces";
 import { Login } from "features/login";
-import { Schedule } from "features/schedule";
+import { SchedulePage } from "features/schedule-page";
 
 export const pages = [
   {
@@ -18,7 +18,7 @@ export const pages = [
   {
     key: "chedule",
     title: "Расписание",
-    Component: <Schedule />,
+    Component: <SchedulePage />,
     path: "/chedule/",
     icon: <BsCalendarCheck style={{ fontSize: "19px" }} />,
     default: true,

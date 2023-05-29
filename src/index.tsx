@@ -7,7 +7,7 @@ import ru_RU from "antd/lib/locale/ru_RU";
 import moment from "moment";
 import "moment/locale/ru";
 
-import { ErrorBoundary } from "./HOC/error-boundary";
+import { ErrorBoundary } from "./HOC";
 import { App } from "./app";
 
 import "./index.css";

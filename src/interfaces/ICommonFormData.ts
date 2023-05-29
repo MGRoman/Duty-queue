@@ -10,7 +10,7 @@ export interface ICommonFormData {
   label?: string;
   type?: "text" | "password" | "multi-select" | "select" | "date-between";
   options?: ISelectOptions[];
-  initialValue?: string | number | string[] | number[] | TDateBetweenFiltersDataType;
+  initialValue?: boolean | string | number | string[] | number[] | TDateBetweenFiltersDataType;
   validate?: (value?: string) => { message: string } | undefined;
   required?: boolean;
   disabled?: boolean;

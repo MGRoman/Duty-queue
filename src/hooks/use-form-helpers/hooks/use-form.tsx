@@ -33,7 +33,7 @@ export const useForm = <T extends Record<string, any>>({
   submitText = firstUC("принять"),
   cancelText = firstUC("отмена"),
   classes,
-}: IUseForm<T>) => {  
+}: IUseForm<T>) => {
   const initialValues = useMemo(
     () => formData.reduce((acc, { name, initialValue }) => ({ ...acc, [name]: initialValue }), {} as T),
     [formData]
@@ -85,7 +85,7 @@ export const useForm = <T extends Record<string, any>>({
     [onOk, handleSubmit, values]
   );
 
-  const formCancel = useCallback(() => {    
+  const formCancel = useCallback(() => {
     onClose && onClose();
 
     resetOnCancel && resetForm();
@@ -123,21 +123,40 @@ export const useForm = <T extends Record<string, any>>({
     [cancelText, classes, formCancel]
   );
 
-  return {
-    initialValues,
-    values,
-    touched,
-    errors,
-    isValid,
-    handleChange,
-    setFieldValue,
-    setValues,
-    handleBlur,
-    handleSubmit: formSubmit,
-    resetForm,
-    initialize,
-    FormFields,
-    SubmitButton,
-    CancelButton,
-  };
+  return useMemo(
+    () => ({
+      initialValues,
+      values,
+      touched,
+      errors,
+      isValid,
+      handleChange,
+      setFieldValue,
+      setValues,
+      handleBlur,
+      handleSubmit: formSubmit,
+      resetForm,
+      initialize,
+      FormFields,
+      SubmitButton,
+      CancelButton,
+    }),
+    [
+      CancelButton,
+      FormFields,
+      SubmitButton,
+      errors,
+      formSubmit,
+      handleBlur,
+      handleChange,
+      initialValues,
+      initialize,
+      isValid,
+      resetForm,
+      setFieldValue,
+      setValues,
+      touched,
+      values,
+    ]
+  );
 };
