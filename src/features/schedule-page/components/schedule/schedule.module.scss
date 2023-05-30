@@ -20,5 +20,24 @@
     & .line-cell:hover {
       border-color: #4197ff;
     }
+
+    & .person-container {
+      & .delete-person-icon {
+        position: absolute;
+        font-size: 19px;
+        fill: rgba(255, 0, 0, 0.7);
+        z-index: 100;
+
+        visibility: hidden;
+
+        &:hover {
+          fill: #4197ff;
+        }
+      }
+
+      &:hover .delete-person-icon {
+        visibility: visible;
+      }
+    }
   }
 }

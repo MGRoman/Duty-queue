@@ -81,7 +81,7 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
   const deleteSchedulePersonForm = useCallback((personName: string) => {
     setSchedulePersonsForm((prev) =>
       Object.keys(prev).reduce<Record<string, ReturnType<typeof useForm>>>(
-        (acc, name) => (name === personName ? { ...acc } : { [name]: prev[name] }),
+        (acc, name) => (name === personName ? { ...acc } : { ...acc, [name]: prev[name] }),
         {} as Record<string, ReturnType<typeof useForm>>
       )
     );
@@ -97,14 +97,12 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
   }, []);
 
   useEffect(() => {
-    if (Object.keys(schedulePersonsForm).length) {
-      setSchedulePersonsValues(
-        Object.keys(schedulePersonsForm).reduce<IPersonSchedule[]>(
-          (acc, name) => [...acc, { name, dates: schedulePersonsForm[name].values as Record<string, boolean> }],
-          [] as IPersonSchedule[]
-        )
-      );
-    }
+    setSchedulePersonsValues(
+      Object.keys(schedulePersonsForm).reduce<IPersonSchedule[]>(
+        (acc, name) => [...acc, { name, dates: schedulePersonsForm[name].values as Record<string, boolean> }],
+        [] as IPersonSchedule[]
+      )
+    );
   }, [schedulePersonsForm]);
 
   return (
