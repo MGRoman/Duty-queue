@@ -1,14 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
+import { Input, Checkbox, Tag, Typography } from "antd";
 
-import { IScheduleProps } from "features/schedule-page/interfaces";
+import { IPersonSchedule, useScheduleContext } from "features/schedule-page/context/schedule-context";
 import { usePersonScheduleForm } from "./use-person-schedule-form";
 
-export const PersonSchedule: React.FC<IScheduleProps> = ({ daysInMonth }) => {
-  const [personName, setPersonName] = useState<string>('sjdb')
+interface IPersonScheduleProps extends IPersonSchedule {
+  classes: { "line-cell"?: string };
+}
 
-  console.log(personName);
-  
-  usePersonScheduleForm({ daysInMonth, personName });
+export const PersonSchedule: React.FC<IPersonScheduleProps> = ({ name, dates, classes }) => {
+  usePersonScheduleForm({ personName: name });
 
-  return null;
+  const { editSchedulePersonFormName } = useScheduleContext();
+
+  return (
+    <>
+      <Typography.Text type="secondary" editable className={classes["line-cell"]}>
+        {name}
+      </Typography.Text>
+
+      {Object.keys(dates).map((day) => (
+        <Typography.Text key={day} className={classes["line-cell"]} />
+      ))}
+    </>
+  );
 };

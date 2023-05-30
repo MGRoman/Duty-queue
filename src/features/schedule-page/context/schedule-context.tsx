@@ -1,12 +1,13 @@
-import React, { createContext, useCallback, useContext, useState, useEffect } from "react";
+import React, { createContext, useCallback, useContext, useState, useEffect, useMemo } from "react";
 import { Moment } from "moment";
 
-import { IDefaultComponentProps } from "interfaces";
+import { ICommonFormData, IDefaultComponentProps } from "interfaces";
 import { useForm } from "hooks";
 
-interface IPersonSchedule {
+export interface IPersonSchedule {
   name: string;
-  dates: string[];
+  // dates: string[];
+  dates: Record<string, boolean>;
 }
 
 interface IAddScheduleForm {
@@ -16,13 +17,17 @@ interface IAddScheduleForm {
 
 interface IScheduleFormContextProps {
   selectedMonth: Moment | null;
-  changeMonthHandler: (month: Moment | null) => void;
+  changeMonth: (month: Moment | null) => void;
   daysInMonth: number[];
 
-  scheduleValues: IPersonSchedule[];
-  scheduleForm: Record<string, ReturnType<typeof useForm>>;
-  addScheduleForm: ({ personName, personScheduleForm }: IAddScheduleForm) => void;
-  deleteScheduleForm: (personName: string) => void;
+  schedulePersonsValues: IPersonSchedule[];
+  addNewPerson: () => void;
+
+  schedulePesonFormData: ICommonFormData[];
+  schedulePersonsForm: Record<string, ReturnType<typeof useForm>>;
+  addSchedulePersonForm: ({ personName, personScheduleForm }: IAddScheduleForm) => void;
+  deleteSchedulePersonForm: (personName: string) => void;
+  editSchedulePersonFormName: (oldName: string, newName: string) => void;
 }
 
 const ScheduleContext = createContext<IScheduleFormContextProps>({} as IScheduleFormContextProps);
@@ -34,7 +39,7 @@ export const useScheduleContext = () => useContext(ScheduleContext);
 export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ children }) => {
   const [selectedMonth, setSelectedMonth] = useState<Moment | null>(null);
 
-  const changeMonthHandler = useCallback((month: Moment | null) => {
+  const changeMonth = useCallback((month: Moment | null) => {
     setSelectedMonth(month);
   }, []);
 
@@ -49,19 +54,32 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
     }
   }, [selectedMonth]);
 
-  const [scheduleValues, setScheduleValues] = useState<IPersonSchedule[]>([]);
+  const [schedulePersonsValues, setSchedulePersonsValues] = useState<IPersonSchedule[]>([]);
 
-  const [scheduleForm, setScheduleForm] = useState<Record<string, ReturnType<typeof useForm>>>({});
+  const addNewPerson = useCallback(() => {
+    setSchedulePersonsValues((prev) => [...prev, { name: `Сотрудник-${prev.length + 1}`, dates: {} }]);
+  }, []);
 
-  const addScheduleForm = useCallback(({ personName, personScheduleForm }: IAddScheduleForm) => {
-    setScheduleForm((prev) => ({
+  const schedulePesonFormData = useMemo(
+    () =>
+      daysInMonth.map<ICommonFormData>((dayNumber) => ({
+        name: String(dayNumber),
+        initialValue: false,
+      })),
+    [daysInMonth]
+  );
+
+  const [schedulePersonsForm, setSchedulePersonsForm] = useState<Record<string, ReturnType<typeof useForm>>>({});
+
+  const addSchedulePersonForm = useCallback(({ personName, personScheduleForm }: IAddScheduleForm) => {
+    setSchedulePersonsForm((prev) => ({
       ...prev,
       [personName]: personScheduleForm,
     }));
   }, []);
 
-  const deleteScheduleForm = useCallback((personName: string) => {
-    setScheduleForm((prev) =>
+  const deleteSchedulePersonForm = useCallback((personName: string) => {
+    setSchedulePersonsForm((prev) =>
       Object.keys(prev).reduce<Record<string, ReturnType<typeof useForm>>>(
         (acc, name) => (name === personName ? { ...acc } : { [name]: prev[name] }),
         {} as Record<string, ReturnType<typeof useForm>>
@@ -69,17 +87,41 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
     );
   }, []);
 
+  const editSchedulePersonFormName = useCallback((oldName: string, newName: string) => {
+    setSchedulePersonsForm((prev) =>
+      Object.keys(prev).reduce<Record<string, ReturnType<typeof useForm>>>(
+        (acc, name) => (name === oldName ? { ...acc, [newName]: prev[name] } : { ...acc, [name]: prev[name] }),
+        {} as Record<string, ReturnType<typeof useForm>>
+      )
+    );
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(schedulePersonsForm).length) {
+      setSchedulePersonsValues(
+        Object.keys(schedulePersonsForm).reduce<IPersonSchedule[]>(
+          (acc, name) => [...acc, { name, dates: schedulePersonsForm[name].values as Record<string, boolean> }],
+          [] as IPersonSchedule[]
+        )
+      );
+    }
+  }, [schedulePersonsForm]);
+
   return (
     <ScheduleContext.Provider
       value={{
         selectedMonth,
-        changeMonthHandler,
+        changeMonth,
         daysInMonth,
 
-        scheduleValues,
-        scheduleForm,
-        addScheduleForm,
-        deleteScheduleForm,
+        schedulePersonsValues,
+        addNewPerson,
+
+        schedulePesonFormData,
+        schedulePersonsForm,
+        addSchedulePersonForm,
+        deleteSchedulePersonForm,
+        editSchedulePersonFormName,
       }}
     >
       {children}

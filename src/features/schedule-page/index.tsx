@@ -12,7 +12,7 @@ import { IDefaultComponentProps } from "interfaces";
 import { ScheduleContextProvider, useScheduleContext } from "./context/schedule-context";
 
 const SchedulePage: React.FC = () => {
-  const { selectedMonth, changeMonthHandler } = useScheduleContext();
+  const { selectedMonth, changeMonth } = useScheduleContext();
 
   return (
     <Space className={classes.schedule} direction="vertical" style={{ width: "100%" }} size={[0, 50]}>
@@ -22,7 +22,7 @@ const SchedulePage: React.FC = () => {
         placeholder="Выберите месяц для планирования"
         format={formatLongMonthYearDate}
         value={selectedMonth}
-        onChange={changeMonthHandler}
+        onChange={changeMonth}
       />
 
       <If condition={selectedMonth}>
