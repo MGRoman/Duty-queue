@@ -15,10 +15,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
+
+      &.checked {
+        background: #8fbcf2;
+      }
     }
 
     & .line-cell:hover {
       border-color: #4197ff;
+      transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
 
     & .person-container {
@@ -32,11 +37,13 @@
 
         &:hover {
           fill: #4197ff;
+          transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
         }
       }
 
       &:hover .delete-person-icon {
         visibility: visible;
+        transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
       }
     }
   }

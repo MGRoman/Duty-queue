@@ -7,6 +7,7 @@ import { usePersonScheduleForm } from "./use-person-schedule-form";
 
 interface IPersonScheduleProps extends IPersonSchedule {
   classes: {
+    checked?: string;
     "line-cell"?: string;
     "person-container"?: string;
     "delete-person-icon"?: string;
@@ -16,7 +17,8 @@ interface IPersonScheduleProps extends IPersonSchedule {
 export const PersonSchedule: React.FC<IPersonScheduleProps> = ({ name, dates, classes }) => {
   usePersonScheduleForm({ personName: name });
 
-  const { editSchedulePersonFormName, deleteSchedulePersonForm } = useScheduleContext();
+  const { editSchedulePersonFormName, deleteSchedulePersonForm, setDutyPersonDay, schedulePersonsForm } =
+    useScheduleContext();
 
   const changeNameHandler = useCallback(
     (value: string) => {
@@ -40,7 +42,11 @@ export const PersonSchedule: React.FC<IPersonScheduleProps> = ({ name, dates, cl
       </span>
 
       {Object.keys(dates).map((day) => (
-        <Typography.Text key={day} className={classes["line-cell"]} />
+        <div
+          key={day}
+          className={`${classes["line-cell"]} ${schedulePersonsForm[name]?.values[day] ? classes.checked : ""}`}
+          onClick={() => setDutyPersonDay(name, day)}
+        />
       ))}
     </>
   );

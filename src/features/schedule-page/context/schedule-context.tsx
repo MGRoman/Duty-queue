@@ -28,6 +28,7 @@ interface IScheduleFormContextProps {
   addSchedulePersonForm: ({ personName, personScheduleForm }: IAddScheduleForm) => void;
   deleteSchedulePersonForm: (personName: string) => void;
   editSchedulePersonFormName: (oldName: string, newName: string) => void;
+  setDutyPersonDay: (name: string, day: string) => void;
 }
 
 const ScheduleContext = createContext<IScheduleFormContextProps>({} as IScheduleFormContextProps);
@@ -96,6 +97,26 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
     );
   }, []);
 
+  const togleDutyPersonDay = useCallback(
+    (name: string, day: string) => {
+      schedulePersonsForm[name].setFieldValue(day, !schedulePersonsForm[name].values[day]);
+    },
+    [schedulePersonsForm]
+  );
+
+  const setDutyPersonDay = useCallback(
+    (name: string, day: string) => {
+      const personToClearDutyDay = Object.keys(schedulePersonsForm).find(
+        (personName) => schedulePersonsForm[personName].values[day]
+      );
+
+      personToClearDutyDay && togleDutyPersonDay(personToClearDutyDay, day);
+
+      togleDutyPersonDay(name, day);
+    },
+    [schedulePersonsForm, togleDutyPersonDay]
+  );
+
   useEffect(() => {
     setSchedulePersonsValues(
       Object.keys(schedulePersonsForm).reduce<IPersonSchedule[]>(
@@ -120,6 +141,7 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
         addSchedulePersonForm,
         deleteSchedulePersonForm,
         editSchedulePersonFormName,
+        setDutyPersonDay,
       }}
     >
       {children}
