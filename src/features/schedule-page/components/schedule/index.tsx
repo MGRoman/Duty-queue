@@ -38,7 +38,7 @@ export const Schedule: React.FC = () => {
         <ScheduleHeader classes={classes} />
       </Col>
 
-      <Col span={24}>
+      <Col span={24} className={classes["schedule-persons-container"]}>
         {schedulePersonsValues.map((props) => (
           <Col
             key={props.name}

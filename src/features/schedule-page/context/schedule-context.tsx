@@ -59,9 +59,13 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
 
   const [schedulePersonsValues, setSchedulePersonsValues] = useState<IPersonSchedule[]>([]);
 
+  const [newPersonsCount, setNewpersonsCount] = useState(0);
+
   const addNewPerson = useCallback(() => {
-    setSchedulePersonsValues((prev) => [...prev, { name: `Сотрудник-${prev.length + 1}`, dates: {} }]);
-  }, []);
+    setSchedulePersonsValues((prev) => [...prev, { name: `Сотрудник-${newPersonsCount + 1}`, dates: {} }]);
+
+    setNewpersonsCount((prev) => prev + 1);
+  }, [newPersonsCount]);
 
   const schedulePesonFormData = useMemo(
     () =>

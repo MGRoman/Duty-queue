@@ -52,4 +52,9 @@
     display: flex;
     justify-content: space-between;
   }
+
+  & .schedule-persons-container {
+    height: 69vh;
+    overflow-y: scroll;
+  }
 }
