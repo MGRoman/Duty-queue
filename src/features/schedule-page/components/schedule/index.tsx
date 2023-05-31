@@ -25,16 +25,18 @@ export const Schedule: React.FC = () => {
         <ScheduleHeader classes={classes} />
       </Col>
 
-      {schedulePersonsValues.map((props) => (
-        <Col
-          key={props.name}
-          span={24}
-          className={classes["schedule-line"]}
-          style={{ gridTemplateColumns: `150px repeat(${daysInMonth.length}, 1fr)` }}
-        >
-          <PersonSchedule classes={classes} {...props} />
-        </Col>
-      ))}
+      <Col span={24}>
+        {schedulePersonsValues.map((props) => (
+          <Col
+            key={props.name}
+            span={24}
+            className={classes["schedule-line"]}
+            style={{ gridTemplateColumns: `150px repeat(${daysInMonth.length}, 1fr)` }}
+          >
+            <PersonSchedule classes={classes} {...props} />
+          </Col>
+        ))}
+      </Col>
     </Row>
   );
 };
