@@ -22,6 +22,8 @@ interface IScheduleFormContextProps {
 
   schedulePersonsValues: IPersonSchedule[];
   addNewPerson: () => void;
+  sendScheduleValues: () => void;
+  resetScheduleValues: () => void;
 
   schedulePesonFormData: ICommonFormData[];
   schedulePersonsForm: Record<string, ReturnType<typeof useForm>>;
@@ -117,6 +119,16 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
     [schedulePersonsForm, togleDutyPersonDay]
   );
 
+  const sendScheduleValues = useCallback(() => {
+    console.log(schedulePersonsValues);
+  }, [schedulePersonsValues]);
+
+  const resetScheduleValues = useCallback(() => {
+    Object.keys(schedulePersonsForm).forEach((name) => {
+      schedulePersonsForm[name].resetForm();
+    });
+  }, [schedulePersonsForm]);
+
   useEffect(() => {
     setSchedulePersonsValues(
       Object.keys(schedulePersonsForm).reduce<IPersonSchedule[]>(
@@ -135,6 +147,8 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
 
         schedulePersonsValues,
         addNewPerson,
+        sendScheduleValues,
+        resetScheduleValues,
 
         schedulePesonFormData,
         schedulePersonsForm,
