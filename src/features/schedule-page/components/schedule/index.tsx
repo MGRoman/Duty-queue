@@ -9,18 +9,17 @@ import { ScheduleHeader } from "../schedule-header";
 import { PersonSchedule } from "../person-schedule";
 
 export const Schedule: React.FC = () => {
-  const { daysInMonth, schedulePersonsValues, addNewPerson, sendScheduleValues, resetScheduleValues } =
-    useScheduleContext();
+  const { daysInMonth, persons, addPerson, sendScheduleValues, clearScheduleValues } = useScheduleContext();
 
-  const disabledSubmit = useMemo<boolean>(() => !Object.keys(schedulePersonsValues).length, [schedulePersonsValues]);
+  const disabledSubmit = useMemo<boolean>(() => !persons.length, [persons]);
 
   return (
     <Row gutter={[0, 20]} className={classes["schedule-container"]}>
       <Col span={24} className={classes["buttons-container"]}>
-        <Button icon={<HiOutlinePlus />} style={{ width: "70px" }} type="dashed" onClick={addNewPerson} />
+        <Button icon={<HiOutlinePlus />} style={{ width: "70px" }} type="dashed" onClick={addPerson} />
 
         <span>
-          <Button disabled={disabledSubmit} onClick={resetScheduleValues} style={{ marginRight: "15px" }}>
+          <Button disabled={disabledSubmit} onClick={clearScheduleValues} style={{ marginRight: "15px" }}>
             Сбросить
           </Button>
 
@@ -39,7 +38,7 @@ export const Schedule: React.FC = () => {
       </Col>
 
       <Col span={24} className={classes["schedule-persons-container"]}>
-        {schedulePersonsValues.map((props) => (
+        {persons.map((props) => (
           <Col
             key={props.name}
             span={24}

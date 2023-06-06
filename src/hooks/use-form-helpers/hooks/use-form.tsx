@@ -7,6 +7,7 @@ import { IDrawerPanelHelpers } from "hooks/use-drawer-panel";
 import { validateForm } from "..";
 import { useFormFields } from "./use-form-fields";
 import { firstUC } from "utils";
+import { getClearedFormValues } from "../utils/get-cleared-form-values";
 
 export interface IUseForm<T> extends Omit<FormikConfig<T>, "initialValues" | "onSubmit"> {
   formData: ICommonFormData[];
@@ -22,10 +23,12 @@ export interface IUseForm<T> extends Omit<FormikConfig<T>, "initialValues" | "on
   };
   submitText?: string;
   cancelText?: string;
+  initialValues?: T;
 }
 
 export const useForm = <T extends Record<string, any>>({
   formData,
+  initialValues,
   open = true,
   onOk,
   onClose,
@@ -34,9 +37,12 @@ export const useForm = <T extends Record<string, any>>({
   cancelText = firstUC("отмена"),
   classes,
 }: IUseForm<T>) => {
-  const initialValues = useMemo(
-    () => formData.reduce((acc, { name, initialValue }) => ({ ...acc, [name]: initialValue }), {} as T),
-    [formData]
+  const initialFormValues = useMemo(
+    () =>
+      initialValues
+        ? initialValues
+        : formData.reduce((acc, { name, initialValue }) => ({ ...acc, [name]: initialValue }), {} as T),
+    [formData, initialValues]
   );
 
   const {
@@ -51,7 +57,7 @@ export const useForm = <T extends Record<string, any>>({
     setFieldValue,
     setValues,
   } = useFormik({
-    initialValues,
+    initialValues: initialFormValues,
     onSubmit: () => {},
     validate: validateForm(formData),
     validateOnMount: true,
@@ -59,16 +65,16 @@ export const useForm = <T extends Record<string, any>>({
 
   const initialize = useCallback(() => {
     resetForm({
-      values: initialValues,
-      errors: validateForm(formData)(initialValues) as FormikErrors<T>,
+      values: initialFormValues,
+      errors: validateForm(formData)(initialFormValues) as FormikErrors<T>,
     });
-  }, [formData, initialValues, resetForm]);
+  }, [formData, initialFormValues, resetForm]);
 
   useEffect(() => {
-    if (initialValues) {
+    if (initialFormValues) {
       initialize();
     }
-  }, [initialValues, initialize]);
+  }, [initialFormValues, initialize]);
 
   useEffect(() => {
     !open && initialize();
@@ -90,6 +96,10 @@ export const useForm = <T extends Record<string, any>>({
 
     resetOnCancel && resetForm();
   }, [onClose, resetForm, resetOnCancel]);
+
+  const formClear = useCallback(() => {
+    setValues(getClearedFormValues(initialFormValues) as T, true);
+  }, [initialFormValues, setValues]);
 
   const FormFields = useFormFields(formData, {
     values,
@@ -125,7 +135,7 @@ export const useForm = <T extends Record<string, any>>({
 
   return useMemo(
     () => ({
-      initialValues,
+      initialValues: initialFormValues,
       values,
       touched,
       errors,
@@ -136,6 +146,7 @@ export const useForm = <T extends Record<string, any>>({
       handleBlur,
       handleSubmit: formSubmit,
       resetForm,
+      clearForm: formClear,
       initialize,
       FormFields,
       SubmitButton,
@@ -149,7 +160,7 @@ export const useForm = <T extends Record<string, any>>({
       formSubmit,
       handleBlur,
       handleChange,
-      initialValues,
+      initialFormValues,
       initialize,
       isValid,
       resetForm,

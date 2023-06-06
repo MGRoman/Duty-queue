@@ -1,21 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
+import { IPerson } from "interfaces";
 import { useForm } from "hooks";
 import { useScheduleContext } from "features/schedule-page/context/schedule-context";
 
-interface IUsePersonScheduleForm {
-  personName?: string;
-}
+export const usePersonScheduleForm = ({ name }: IPerson) => {
+  const { addSchedulePersonForm, schedulePersonsForm, schedulePesonFormData: formData } = useScheduleContext();
 
-export const usePersonScheduleForm = ({ personName }: IUsePersonScheduleForm) => {
-  const { schedulePesonFormData: formData, addSchedulePersonForm } = useScheduleContext();
+  const initial = useMemo(() => schedulePersonsForm?.[name]?.values, [name, schedulePersonsForm]);
+  
+  const form = useForm({ formData, initialValues: initial });
 
-  const form = useForm({ formData });
-
-  //проверить, нет ли косяков с перетиранием
   useEffect(() => {
-    if (personName) {
-      addSchedulePersonForm({ personName, personScheduleForm: form });
-    }
-  }, [addSchedulePersonForm, form, personName]);
+    addSchedulePersonForm({ personName: name, personScheduleForm: form });
+  }, [addSchedulePersonForm, form, name]);
 };

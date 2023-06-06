@@ -2,10 +2,11 @@ import React, { useCallback } from "react";
 import { MdDeleteForever } from "react-icons/md";
 import { Typography } from "antd";
 
-import { IPersonSchedule, useScheduleContext } from "features/schedule-page/context/schedule-context";
+import { IPerson } from "interfaces";
+import { useScheduleContext } from "features/schedule-page/context/schedule-context";
 import { usePersonScheduleForm } from "./use-person-schedule-form";
 
-interface IPersonScheduleProps extends IPersonSchedule {
+interface IPersonScheduleProps extends IPerson {
   classes: {
     checked?: string;
     "line-cell"?: string;
@@ -14,38 +15,38 @@ interface IPersonScheduleProps extends IPersonSchedule {
   };
 }
 
-export const PersonSchedule: React.FC<IPersonScheduleProps> = ({ name, dates, classes }) => {
-  usePersonScheduleForm({ personName: name });
+export const PersonSchedule: React.FC<IPersonScheduleProps> = ({ name, classes }) => {
+  usePersonScheduleForm({ name });
 
-  const { editSchedulePersonFormName, deleteSchedulePersonForm, setDutyPersonDay, schedulePersonsForm } =
+  const { editPersonHandler, deletePersonHandler, dutyDayHandler, schedulePersonsForm, daysInMonth } =
     useScheduleContext();
 
   const changeNameHandler = useCallback(
     (value: string) => {
-      editSchedulePersonFormName(name, value);
+      editPersonHandler(name, value);
     },
-    [editSchedulePersonFormName, name]
+    [editPersonHandler, name]
   );
 
-  const deletePersonHandler = useCallback(() => {
-    deleteSchedulePersonForm(name);
-  }, [deleteSchedulePersonForm, name]);
+  const deleteHandler = useCallback(() => {
+    deletePersonHandler(name);
+  }, [deletePersonHandler, name]);
 
   return (
     <>
       <span className={classes["person-container"]}>
-        <MdDeleteForever className={classes["delete-person-icon"]} onClick={deletePersonHandler} />
+        <MdDeleteForever className={classes["delete-person-icon"]} onClick={deleteHandler} />
 
         <Typography.Text type="secondary" editable={{ onChange: changeNameHandler }} className={classes["line-cell"]}>
           {name}
         </Typography.Text>
       </span>
 
-      {Object.keys(dates).map((day) => (
+      {daysInMonth.map((day) => (
         <div
-          key={day}
+          key={String(day)}
           className={`${classes["line-cell"]} ${schedulePersonsForm[name]?.values[day] ? classes.checked : ""}`}
-          onClick={() => setDutyPersonDay(name, day)}
+          onClick={() => dutyDayHandler(name, String(day))}
         />
       ))}
     </>

@@ -1,8 +1,11 @@
-import React, { createContext, useCallback, useContext, useState, useEffect, useMemo } from "react";
+import React, { createContext, useCallback, useContext, useState, useEffect } from "react";
 import { Moment } from "moment";
 
-import { ICommonFormData, IDefaultComponentProps } from "interfaces";
+import { ICommonFormData, IDefaultComponentProps, IPerson } from "interfaces";
+import { IAddScheduleForm, useScheduleForm } from "./use-schedule-form";
+import { usePersons } from "./use-persons";
 import { useForm } from "hooks";
+import { useScheduleMonth } from "./use-schedule-month";
 
 export interface IPersonSchedule {
   name: string;
@@ -10,27 +13,25 @@ export interface IPersonSchedule {
   dates: Record<string, boolean>;
 }
 
-interface IAddScheduleForm {
-  personName: string;
-  personScheduleForm: ReturnType<typeof useForm>;
-}
-
 interface IScheduleFormContextProps {
   selectedMonth: Moment | null;
   changeMonth: (month: Moment | null) => void;
   daysInMonth: number[];
 
-  schedulePersonsValues: IPersonSchedule[];
-  addNewPerson: () => void;
-  sendScheduleValues: () => void;
-  resetScheduleValues: () => void;
+  persons: IPerson[];
+  addPerson: () => void;
 
   schedulePesonFormData: ICommonFormData[];
   schedulePersonsForm: Record<string, ReturnType<typeof useForm>>;
   addSchedulePersonForm: ({ personName, personScheduleForm }: IAddScheduleForm) => void;
-  deleteSchedulePersonForm: (personName: string) => void;
-  editSchedulePersonFormName: (oldName: string, newName: string) => void;
-  setDutyPersonDay: (name: string, day: string) => void;
+
+  deletePersonHandler: (personName: string) => void;
+  editPersonHandler: (oldName: string, newName: string) => void;
+
+  dutyDayHandler: (name: string, day: string) => void;
+
+  sendScheduleValues: () => void;
+  clearScheduleValues: () => void;
 }
 
 const ScheduleContext = createContext<IScheduleFormContextProps>({} as IScheduleFormContextProps);
@@ -40,107 +41,38 @@ ScheduleContext.displayName = "ScheduleContext";
 export const useScheduleContext = () => useContext(ScheduleContext);
 
 export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ children }) => {
-  const [selectedMonth, setSelectedMonth] = useState<Moment | null>(null);
+  const { selectedMonth, changeMonth, daysInMonth } = useScheduleMonth();
 
-  const changeMonth = useCallback((month: Moment | null) => {
-    setSelectedMonth(month);
-  }, []);
+  const { persons, addPerson, editPerson, deletePerson } = usePersons();
 
-  const [daysInMonth, setDaysInMonth] = useState<number[]>([]);
+  const {
+    schedulePesonFormData,
+    schedulePersonsForm,
+    addSchedulePersonForm,
+    deleteSchedulePersonForm,
+    editSchedulePersonFormName,
+    dutyDayHandler,
+    clearScheduleValues,
+    sendScheduleValues,
+  } = useScheduleForm();
 
-  useEffect(() => {
-    if (selectedMonth) {
-      const days = Array.from({ length: selectedMonth.daysInMonth() }, (_, index) => ++index);
-      setDaysInMonth(days);
-    } else {
-      setDaysInMonth([]);
-    }
-  }, [selectedMonth]);
+  const deletePersonHandler = useCallback(
+    (personName: string) => {
+      deletePerson(personName);
 
-  const [schedulePersonsValues, setSchedulePersonsValues] = useState<IPersonSchedule[]>([]);
-
-  const [newPersonsCount, setNewpersonsCount] = useState(0);
-
-  const addNewPerson = useCallback(() => {
-    setSchedulePersonsValues((prev) => [...prev, { name: `Сотрудник-${newPersonsCount + 1}`, dates: {} }]);
-
-    setNewpersonsCount((prev) => prev + 1);
-  }, [newPersonsCount]);
-
-  const schedulePesonFormData = useMemo(
-    () =>
-      daysInMonth.map<ICommonFormData>((dayNumber) => ({
-        name: String(dayNumber),
-        initialValue: false,
-      })),
-    [daysInMonth]
-  );
-
-  const [schedulePersonsForm, setSchedulePersonsForm] = useState<Record<string, ReturnType<typeof useForm>>>({});
-
-  const addSchedulePersonForm = useCallback(({ personName, personScheduleForm }: IAddScheduleForm) => {
-    setSchedulePersonsForm((prev) => ({
-      ...prev,
-      [personName]: personScheduleForm,
-    }));
-  }, []);
-
-  const deleteSchedulePersonForm = useCallback((personName: string) => {
-    setSchedulePersonsForm((prev) =>
-      Object.keys(prev).reduce<Record<string, ReturnType<typeof useForm>>>(
-        (acc, name) => (name === personName ? { ...acc } : { ...acc, [name]: prev[name] }),
-        {} as Record<string, ReturnType<typeof useForm>>
-      )
-    );
-  }, []);
-
-  const editSchedulePersonFormName = useCallback((oldName: string, newName: string) => {
-    setSchedulePersonsForm((prev) =>
-      Object.keys(prev).reduce<Record<string, ReturnType<typeof useForm>>>(
-        (acc, name) => (name === oldName ? { ...acc, [newName]: prev[name] } : { ...acc, [name]: prev[name] }),
-        {} as Record<string, ReturnType<typeof useForm>>
-      )
-    );
-  }, []);
-
-  const togleDutyPersonDay = useCallback(
-    (name: string, day: string) => {
-      schedulePersonsForm[name].setFieldValue(day, !schedulePersonsForm[name].values[day]);
+      deleteSchedulePersonForm(personName);
     },
-    [schedulePersonsForm]
+    [deletePerson, deleteSchedulePersonForm]
   );
 
-  const setDutyPersonDay = useCallback(
-    (name: string, day: string) => {
-      const personToClearDutyDay = Object.keys(schedulePersonsForm).find(
-        (personName) => schedulePersonsForm[personName].values[day]
-      );
+  const editPersonHandler = useCallback(
+    (oldName: string, newName: string) => {
+      editPerson(oldName, newName);
 
-      personToClearDutyDay && togleDutyPersonDay(personToClearDutyDay, day);
-
-      togleDutyPersonDay(name, day);
+      editSchedulePersonFormName(oldName, newName);
     },
-    [schedulePersonsForm, togleDutyPersonDay]
+    [editPerson, editSchedulePersonFormName]
   );
-
-  const sendScheduleValues = useCallback(() => {
-    console.log(schedulePersonsValues);
-  }, [schedulePersonsValues]);
-
-  const resetScheduleValues = useCallback(() => {
-    Object.keys(schedulePersonsForm).forEach((name) => {
-      schedulePersonsForm[name].resetForm();
-    });
-  }, [schedulePersonsForm]);
-
-  useEffect(() => {
-    setSchedulePersonsValues(
-      Object.keys(schedulePersonsForm).reduce<IPersonSchedule[]>(
-        (acc, name) => [...acc, { name, dates: schedulePersonsForm[name].values as Record<string, boolean> }],
-        [] as IPersonSchedule[]
-      )
-    );
-  }, [schedulePersonsForm]);
 
   return (
     <ScheduleContext.Provider
@@ -149,17 +81,20 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
         changeMonth,
         daysInMonth,
 
-        schedulePersonsValues,
-        addNewPerson,
-        sendScheduleValues,
-        resetScheduleValues,
+        persons,
+        addPerson,
 
         schedulePesonFormData,
         schedulePersonsForm,
         addSchedulePersonForm,
-        deleteSchedulePersonForm,
-        editSchedulePersonFormName,
-        setDutyPersonDay,
+
+        deletePersonHandler,
+        editPersonHandler,
+
+        dutyDayHandler,
+
+        sendScheduleValues,
+        clearScheduleValues,
       }}
     >
       {children}
