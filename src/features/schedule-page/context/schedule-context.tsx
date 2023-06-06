@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useState, useEffect } from "react";
+import React, { createContext, useCallback, useContext } from "react";
 import { Moment } from "moment";
 
 import { ICommonFormData, IDefaultComponentProps, IPerson } from "interfaces";
@@ -6,12 +6,6 @@ import { IAddScheduleForm, useScheduleForm } from "./use-schedule-form";
 import { usePersons } from "./use-persons";
 import { useForm } from "hooks";
 import { useScheduleMonth } from "./use-schedule-month";
-
-export interface IPersonSchedule {
-  name: string;
-  // dates: string[];
-  dates: Record<string, boolean>;
-}
 
 interface IScheduleFormContextProps {
   selectedMonth: Moment | null;
@@ -54,7 +48,7 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
     dutyDayHandler,
     clearScheduleValues,
     sendScheduleValues,
-  } = useScheduleForm();
+  } = useScheduleForm(daysInMonth);
 
   const deletePersonHandler = useCallback(
     (personName: string) => {

@@ -1,3 +1,10 @@
 .schedule {
   padding: 24px;
+  width: 100%;
+
+  & .month-picker {
+    width: 300px;
+    height: 40px;
+    margin-left: 12px;
+  }
 }

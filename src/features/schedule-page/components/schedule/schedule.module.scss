@@ -1,5 +1,6 @@
 .schedule-container {
   & .schedule-line {
+    padding: 0 12px;
     display: grid;
     column-gap: 3px;
 
@@ -49,6 +50,7 @@
   }
 
   & .buttons-container {
+    padding: 0 12px;
     display: flex;
     justify-content: space-between;
   }

@@ -15,10 +15,10 @@ const SchedulePage: React.FC = () => {
   const { selectedMonth, changeMonth } = useScheduleContext();
 
   return (
-    <Space className={classes.schedule} direction="vertical" style={{ width: "100%" }} size={[0, 50]}>
+    <Space className={classes.schedule} direction="vertical" size={[0, 50]}>
       <DatePicker
         picker="month"
-        style={{ width: "300px", height: "40px" }}
+        className={classes["month-picker"]}
         placeholder="Выберите месяц для планирования"
         format={formatLongMonthYearDate}
         value={selectedMonth}

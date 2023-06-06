@@ -1,2 +1,0 @@
-import { IDefaultComponentProps } from "interfaces";
-

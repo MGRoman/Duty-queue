@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { ICommonFormData } from "interfaces";
-import { useScheduleContext } from "./schedule-context";
+import { ICommonFormData, IPersonSchedule } from "interfaces";
 import { useForm } from "hooks";
 
 export interface IAddScheduleForm {
@@ -9,15 +8,15 @@ export interface IAddScheduleForm {
   personScheduleForm: ReturnType<typeof useForm>;
 }
 
-export const useScheduleForm = () => {
-  const { daysInMonth } = useScheduleContext();
-
+export const useScheduleForm = (daysInMonth: number[]) => {
   const schedulePesonFormData = useMemo(
     () =>
-    daysInMonth ? daysInMonth.map<ICommonFormData>((dayNumber) => ({
-        name: String(dayNumber),
-        initialValue: false,
-      })) : [],
+      daysInMonth
+        ? daysInMonth.map<ICommonFormData>((dayNumber) => ({
+            name: String(dayNumber),
+            initialValue: false,
+          }))
+        : [],
     [daysInMonth]
   );
 
@@ -69,7 +68,12 @@ export const useScheduleForm = () => {
   );
 
   const sendScheduleValues = useCallback(() => {
-    console.log(schedulePersonsForm);
+    const values: IPersonSchedule[] = Object.keys(schedulePersonsForm).map((name) => ({
+      name,
+      dates: schedulePersonsForm[name].values,
+    }));
+
+    console.log(values);
   }, [schedulePersonsForm]);
 
   const clearScheduleValues = useCallback(() => {
