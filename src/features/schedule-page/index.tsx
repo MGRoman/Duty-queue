@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Space } from "antd";
-import { Moment } from "moment";
 
 import { formatLongMonthYearDate } from "consts/dateFormat";
 import { DatePicker, If } from "components";

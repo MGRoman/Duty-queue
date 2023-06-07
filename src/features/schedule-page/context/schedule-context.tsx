@@ -26,6 +26,7 @@ interface IScheduleFormContextProps {
 
   sendScheduleValues: () => void;
   clearScheduleValues: () => void;
+  autoCompleteScheduleValues: () => void;
 }
 
 const ScheduleContext = createContext<IScheduleFormContextProps>({} as IScheduleFormContextProps);
@@ -48,7 +49,8 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
     dutyDayHandler,
     clearScheduleValues,
     sendScheduleValues,
-  } = useScheduleForm(daysInMonth);
+    autoCompleteScheduleValues,
+  } = useScheduleForm(daysInMonth, persons);
 
   const deletePersonHandler = useCallback(
     (personName: string) => {
@@ -89,6 +91,7 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
 
         sendScheduleValues,
         clearScheduleValues,
+        autoCompleteScheduleValues,
       }}
     >
       {children}

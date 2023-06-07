@@ -157,6 +157,7 @@ export const useForm = <T extends Record<string, any>>({
       FormFields,
       SubmitButton,
       errors,
+      formClear,
       formSubmit,
       handleBlur,
       handleChange,

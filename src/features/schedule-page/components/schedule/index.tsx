@@ -9,21 +9,33 @@ import { ScheduleHeader } from "../schedule-header";
 import { PersonSchedule } from "../person-schedule";
 
 export const Schedule: React.FC = () => {
-  const { daysInMonth, persons, addPerson, sendScheduleValues, clearScheduleValues } = useScheduleContext();
+  const { daysInMonth, persons, addPerson, sendScheduleValues, clearScheduleValues, autoCompleteScheduleValues } =
+    useScheduleContext();
 
-  const disabledSubmit = useMemo<boolean>(() => !persons.length, [persons]);
+  const disabled = useMemo<boolean>(() => !persons.length, [persons]);
 
   return (
     <Row gutter={[0, 20]} className={classes["schedule-container"]}>
       <Col span={24} className={classes["buttons-container"]}>
-        <Button icon={<HiOutlinePlus />} style={{ width: "70px" }} type="dashed" onClick={addPerson} />
+        <span>
+          <Button
+            icon={<HiOutlinePlus />}
+            style={{ width: "70px", marginRight: "15px  " }}
+            type="dashed"
+            onClick={addPerson}
+          />
+
+          <Button disabled={disabled} onClick={autoCompleteScheduleValues}>
+            Заполнить автоматически
+          </Button>
+        </span>
 
         <span>
-          <Button disabled={disabledSubmit} onClick={clearScheduleValues} style={{ marginRight: "15px" }}>
+          <Button disabled={disabled} onClick={clearScheduleValues} style={{ marginRight: "15px" }}>
             Сбросить
           </Button>
 
-          <Button disabled={disabledSubmit} onClick={sendScheduleValues}>
+          <Button disabled={disabled} onClick={sendScheduleValues}>
             Отправить
           </Button>
         </span>

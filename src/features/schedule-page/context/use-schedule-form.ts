@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { ICommonFormData, IPersonSchedule } from "interfaces";
+import { ICommonFormData, IPerson, IPersonSchedule } from "interfaces";
 import { useForm } from "hooks";
 
 export interface IAddScheduleForm {
@@ -8,7 +8,7 @@ export interface IAddScheduleForm {
   personScheduleForm: ReturnType<typeof useForm>;
 }
 
-export const useScheduleForm = (daysInMonth: number[]) => {
+export const useScheduleForm = (daysInMonth: number[], persons: IPerson[]) => {
   const schedulePesonFormData = useMemo(
     () =>
       daysInMonth
@@ -67,6 +67,20 @@ export const useScheduleForm = (daysInMonth: number[]) => {
     [schedulePersonsForm, togleDutyPersonDay]
   );
 
+  const autoCompleteScheduleValues = useCallback(() => {
+    Object.keys(schedulePersonsForm).forEach((name, personIndex) => {
+      const values = daysInMonth.reduce<Record<string, any>>(
+        (acc, dayNumber, dayIndex) => ({
+          ...acc,
+          [String(dayNumber)]: (dayIndex - personIndex) % persons.length === 0 ? true : false,
+        }),
+        {} as Record<string, any>
+      );
+
+      schedulePersonsForm[name].setValues(values);
+    });
+  }, [daysInMonth, persons.length, schedulePersonsForm]);
+
   const sendScheduleValues = useCallback(() => {
     const values: IPersonSchedule[] = Object.keys(schedulePersonsForm).map((name) => ({
       name,
@@ -91,5 +105,6 @@ export const useScheduleForm = (daysInMonth: number[]) => {
     dutyDayHandler,
     sendScheduleValues,
     clearScheduleValues,
+    autoCompleteScheduleValues,
   };
 };
