@@ -1,8 +1,11 @@
 /**
- * Длинный человекочитаемый формат: 9 января 2023 г. 12:32:41
+ * Формат для отображения выбранного месяца: январь 2023
  */
 export const formatLongMonthYearDate = "MMMM YYYY";
 
+/**
+ * Длинный человекочитаемый формат: 9 января 2023 г. 12:32:41
+ */
 export const formatLongDateTime = "D MMMM YYYY г. HH:mm:ss";
 
 /**

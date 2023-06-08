@@ -1,6 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
+import { mapKeys } from "lodash";
+import { Moment } from "moment";
 
 import { ICommonFormData, IPerson, IPersonSchedule } from "interfaces";
+import { getDateStringByDay } from "../utils";
 import { useForm } from "hooks";
 
 export interface IAddScheduleForm {
@@ -8,7 +11,7 @@ export interface IAddScheduleForm {
   personScheduleForm: ReturnType<typeof useForm>;
 }
 
-export const useScheduleForm = (daysInMonth: number[], persons: IPerson[]) => {
+export const useScheduleForm = (persons: IPerson[], daysInMonth: number[], month: Moment | null) => {
   const schedulePesonFormData = useMemo(
     () =>
       daysInMonth
@@ -82,13 +85,16 @@ export const useScheduleForm = (daysInMonth: number[], persons: IPerson[]) => {
   }, [daysInMonth, persons.length, schedulePersonsForm]);
 
   const sendScheduleValues = useCallback(() => {
-    const values: IPersonSchedule[] = Object.keys(schedulePersonsForm).map((name) => ({
-      name,
-      dates: schedulePersonsForm[name].values,
-    }));
+    const values: IPersonSchedule[] = Object.keys(schedulePersonsForm).map((name) => {
+      const dates: Record<string, any> = mapKeys(schedulePersonsForm[name].values, (_, k) =>
+        getDateStringByDay(month, k)
+      );
+
+      return { name, dates };
+    });
 
     console.log(values);
-  }, [schedulePersonsForm]);
+  }, [month, schedulePersonsForm]);
 
   const clearScheduleValues = useCallback(() => {
     Object.keys(schedulePersonsForm).forEach((name) => {

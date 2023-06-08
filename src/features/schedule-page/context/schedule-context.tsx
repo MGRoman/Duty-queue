@@ -50,7 +50,7 @@ export const ScheduleContextProvider: React.FC<IDefaultComponentProps> = ({ chil
     clearScheduleValues,
     sendScheduleValues,
     autoCompleteScheduleValues,
-  } = useScheduleForm(daysInMonth, persons);
+  } = useScheduleForm(persons, daysInMonth, selectedMonth);
 
   const deletePersonHandler = useCallback(
     (personName: string) => {
